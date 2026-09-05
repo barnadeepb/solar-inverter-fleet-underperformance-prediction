@@ -1,0 +1,14 @@
+{
+  "n_inverters": 22,
+  "k_mad_band_width": 3.0,
+  "flagged_inverters": [
+    "bvBOhCH3iADSZry",
+    "1BY6WEcLGh8j5v7"
+  ],
+  "flagged_mean_ratios": {
+    "bvBOhCH3iADSZry": 0.9320513203038682,
+    "1BY6WEcLGh8j5v7": 0.9473965837671008
+  },
+  "fleet_mean_ratio": 1.029893628082844,
+  "fleet_median_ratio": 1.0289809979396047
+}
