@@ -1,0 +1,9 @@
+{
+  "model": "random_forest",
+  "interval": "[5th, 95th] percentile of per-tree predictions",
+  "nominal_coverage": 0.9,
+  "empirical_coverage": 0.5565157276183892,
+  "mean_interval_width_kw": 65.244146511995,
+  "median_interval_width_kw": 55.23943147863315,
+  "n_test": 11572
+}
