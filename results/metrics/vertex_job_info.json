@@ -1,0 +1,8 @@
+{
+  "project": "project-0615c873-134d-4b53-b2e",
+  "location": "us-central1",
+  "bucket": "cloud-ai-platform-044fb91d-44b7-4006-b40d-6ba11e1b2e0c",
+  "train_gcs_uri": "gs://cloud-ai-platform-044fb91d-44b7-4006-b40d-6ba11e1b2e0c/solar-pv-underperformance/automl/train.csv",
+  "test_gcs_uri": "gs://cloud-ai-platform-044fb91d-44b7-4006-b40d-6ba11e1b2e0c/solar-pv-underperformance/automl/test_features.csv",
+  "training_job_resource_name": "projects/790973489130/locations/us-central1/trainingPipelines/7396171324252487680"
+}
