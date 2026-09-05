@@ -23,7 +23,12 @@ WEATHER_FEATURES = ["AMBIENT_TEMPERATURE", "MODULE_TEMPERATURE", "IRRADIATION"]
 
 def _load_generation(path: pathlib.Path) -> pd.DataFrame:
     df = pd.read_csv(path)
-    df["DATE_TIME"] = pd.to_datetime(df["DATE_TIME"], dayfirst=True)
+    # Plant 1's generation file uses DD-MM-YYYY HH:MM; Plant 2's uses
+    # YYYY-MM-DD HH:MM:SS. Detect from the first value rather than hardcode
+    # per plant, since both formats appear in this dataset's public mirrors.
+    sample = str(df["DATE_TIME"].iloc[0])
+    dayfirst = not sample[:4].isdigit()
+    df["DATE_TIME"] = pd.to_datetime(df["DATE_TIME"], dayfirst=dayfirst)
     return df
 
 
