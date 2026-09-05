@@ -1,0 +1,10 @@
+numpy
+pandas
+scikit-learn
+xgboost
+lightgbm
+torch
+shap
+matplotlib
+google-cloud-aiplatform
+google-cloud-storage

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.ipynb_checkpoints/
+.DS_Store
+*.log
+gcp-key.json
+.env
+results/models/*.pt
+results/models/*.pkl
