@@ -1,0 +1,47 @@
+{
+  "n_repeats": 500,
+  "results": {
+    "naive_mean": {
+      "median_latency_ms": 0.001400010660290718,
+      "p95_latency_ms": 0.001800013706088066,
+      "mean_latency_ms": 0.0015993989072740078,
+      "model_size_kb": 0.0751953125
+    },
+    "linear_regression": {
+      "median_latency_ms": 0.05760003114119172,
+      "p95_latency_ms": 0.07183996785897757,
+      "mean_latency_ms": 0.06081840058322996,
+      "model_size_kb": 0.4443359375
+    },
+    "ridge": {
+      "median_latency_ms": 0.058399979025125504,
+      "p95_latency_ms": 0.07297503179870539,
+      "mean_latency_ms": 0.06170380185358226,
+      "model_size_kb": 0.4462890625
+    },
+    "random_forest": {
+      "median_latency_ms": 63.894349994370714,
+      "p95_latency_ms": 71.6989449923858,
+      "mean_latency_ms": 63.64826760033611,
+      "model_size_kb": 50128.7060546875
+    },
+    "xgboost": {
+      "median_latency_ms": 0.8502999844495207,
+      "p95_latency_ms": 1.184724990162066,
+      "mean_latency_ms": 0.8975487998686731,
+      "model_size_kb": 966.6953125
+    },
+    "lightgbm": {
+      "median_latency_ms": 0.7760000298731029,
+      "p95_latency_ms": 1.8848799751140177,
+      "mean_latency_ms": 1.0267527998657897,
+      "model_size_kb": 944.12890625
+    },
+    "mlp": {
+      "median_latency_ms": 0.2621999883558601,
+      "p95_latency_ms": 0.2972299902467056,
+      "mean_latency_ms": 0.22699759947136045,
+      "model_size_kb": 13.21484375
+    }
+  }
+}
