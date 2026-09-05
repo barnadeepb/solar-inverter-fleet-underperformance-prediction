@@ -47,12 +47,18 @@ def main():
     print(f"training complete, model: {model.resource_name}")
 
     dest_prefix = f"gs://{info['bucket']}/solar-pv-underperformance/automl/predictions"
+    # First attempt hit a transient "machine type temporarily unavailable"
+    # capacity error on the default machine type; pin an explicit, widely
+    # available machine type to avoid retrying into the same failure.
     batch_job = model.batch_predict(
         job_display_name="solar-plant1-automl-batch-predict",
         gcs_source=info["test_gcs_uri"],
         gcs_destination_prefix=dest_prefix,
         instances_format="csv",
         predictions_format="jsonl",
+        machine_type="n1-standard-4",
+        starting_replica_count=1,
+        max_replica_count=1,
         sync=True,
     )
 
