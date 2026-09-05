@@ -75,14 +75,18 @@ variance by construction.
 | LightGBM | 65.37 +/- 0.00 | 30.71 | 0.967 |
 | XGBoost | 65.18 +/- 0.00 | 30.84 | 0.968 |
 | MLP | 63.73 +/- 0.19 | 30.08 | 0.969 |
-| Vertex AI AutoML Tables | *(pending -- see Status below)* | | |
+| Vertex AI AutoML Tables | 63.80 | 29.62 | 0.969 |
 
 All models clear the naive baseline by a wide margin; differences between
 linear, tree-ensemble, and neural approaches are modest once the split is
 chronological rather than random shuffle (compare against random-split
 numbers, which run closer to RMSE ~46 kW -- the chronological split is the
 harder, more honest test, since a random split lets nearby-in-time daylight
-readings leak information across the train/test boundary).
+readings leak information across the train/test boundary). Notably, a
+managed AutoML product (Vertex AI AutoML Tables) does not beat a
+lightweight, hand-built MLP on this problem -- it matches it almost
+exactly, while costing over an hour of training time and real compute
+spend versus seconds on a laptop CPU.
 
 See `results/figures/model_comparison.png`.
 
@@ -142,10 +146,9 @@ Tables regressor on the identical train/test split, and
 `src/vertex_automl_evaluate.py` scores it via batch prediction on the
 held-out test set using the same RMSE/MAE/R2 metrics as every other model.
 
-**Status:** training job launched; AutoML Tables training takes on the
-order of an hour or more even for a small dataset, so results are appended
-to `results/metrics/regression_benchmark.json` under
-`vertex_automl_tables` once `vertex_automl_evaluate.py` finishes.
+**Status:** complete. Training took roughly an hour; results are in
+`results/metrics/regression_benchmark.json` under `vertex_automl_tables`
+and in the table above.
 
 ## Repository layout
 

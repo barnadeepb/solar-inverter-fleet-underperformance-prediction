@@ -67,7 +67,10 @@ def main():
     for blob in storage_client.list_blobs(
         info["bucket"], prefix=batch_job.output_info.gcs_output_directory.replace(f"gs://{info['bucket']}/", "")
     ):
-        if not blob.name.endswith(".jsonl"):
+        # Vertex names tabular batch-prediction output
+        # "prediction.results-NNNNN-of-NNNNN" (JSONL content, no .jsonl
+        # extension) alongside a separate "prediction.errors_stats" file.
+        if "results" not in blob.name:
             continue
         for line in blob.download_as_text().splitlines():
             if not line.strip():

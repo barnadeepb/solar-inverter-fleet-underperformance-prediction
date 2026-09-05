@@ -184,6 +184,21 @@
         "mean": 1.0856671558750179e-06,
         "std": 1.5538851216131856e-07
       }
+    },
+    "vertex_automl_tables": {
+      "rmse": {
+        "mean": 63.799776100297,
+        "std": 0.0
+      },
+      "mae": {
+        "mean": 29.62213117324839,
+        "std": 0.0
+      },
+      "r2": {
+        "mean": 0.96894910447715,
+        "std": 0.0
+      },
+      "note": "single run: managed AutoML training is not repeated across seeds"
     }
   }
 }
