@@ -38,6 +38,16 @@ cd paper
 python generate_paper.py
 ```
 
+## Pre-submission audit
+
+`AUDIT.md` documents a claim-by-claim verification pass against the results
+files and cited literature, run before submission. It found and fixed one
+factually wrong methodological claim (a random-vs-chronological split
+comparison that had never actually been run), one misstated number, a dead
+reference URL, and a reference-ordering issue, plus flagged two items that
+still need author input. `PESA_Full_Paper_AUDITED.docx` is the same paper
+with these findings as anchored Word comments.
+
 ## Still to fill in before submission
 
 - The authors'-background page (last sheet of the docx) has each
