@@ -1,0 +1,19 @@
+{
+  "split": "random 80/20, row-wise shuffle",
+  "random_split_rmse": {
+    "naive_mean": 380.6015625,
+    "linear_regression": 76.2457504272461,
+    "ridge": 76.23949432373047,
+    "random_forest": 67.94605091197711,
+    "xgboost": 67.78425598144531,
+    "lightgbm": 67.82342743037063
+  },
+  "chronological_split_rmse": {
+    "naive_mean": 364.67344124572605,
+    "linear_regression": 66.33523408604209,
+    "ridge": 66.37725469922849,
+    "random_forest": 66.7139814273436,
+    "xgboost": 65.17951098576722,
+    "lightgbm": 65.36842734857478
+  }
+}
