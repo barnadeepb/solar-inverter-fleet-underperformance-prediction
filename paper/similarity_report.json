@@ -1,0 +1,124 @@
+{
+  "draft": "paper/PESA_Full_Paper.pdf",
+  "body_words": 3742,
+  "reference_words": 568,
+  "n": 7,
+  "sources": {
+    "README.md": {
+      "source_words": 1542,
+      "matched_words": 88,
+      "pct": 2.35,
+      "runs": [
+        {
+          "words": 12,
+          "text": "are excluded from all accuracy metrics since a model that always predicts"
+        },
+        {
+          "words": 12,
+          "text": "at night would otherwise dominate the error statistics with a trivially solved"
+        },
+        {
+          "words": 11,
+          "text": "tests genuine forecasting into an unseen future period rather than interpolation"
+        },
+        {
+          "words": 11,
+          "text": "genuine forecasting into an unseen future period rather than interpolation between"
+        },
+        {
+          "words": 9,
+          "text": "0 966 ridge 66 38 34 89 0 966"
+        },
+        {
+          "words": 9,
+          "text": "plant 1 and testing zero shot on plant 2"
+        },
+        {
+          "words": 8,
+          "text": "every stochastic model random forest xgboost lightgbm mlp"
+        },
+        {
+          "words": 8,
+          "text": "linear regression 66 34 34 80 0 966"
+        },
+        {
+          "words": 8,
+          "text": "should not be trusted at face value for"
+        }
+      ]
+    },
+    "paper/analysis.md": {
+      "source_words": 2011,
+      "matched_words": 355,
+      "pct": 9.49,
+      "runs": [
+        {
+          "words": 27,
+          "text": "to its near solar noon maximum within a single day so replacing a missing irradiance reading with its unconditional mean discards almost all information in that reading"
+        },
+        {
+          "words": 22,
+          "text": "permanent shading specific to that inverter's string layout or a degraded electrical connection rather than measurement noise or a transient weather artifact"
+        },
+        {
+          "words": 22,
+          "text": "with ambient temperature module temperature and the two time of day encodings each contributing a few percent or less by either measure"
+        },
+        {
+          "words": 17,
+          "text": "weather conditioned expected output modeling for inverter level underperformance detection in a grid connected solar pv fleet"
+        },
+        {
+          "words": 17,
+          "text": "that the model has learned the correct physical driver of solar output rather than a spurious correlate"
+        },
+        {
+          "words": 17,
+          "text": "cross plant generalization training on all of plant 1 and testing zero shot on plant 2 collapses"
+        },
+        {
+          "words": 16,
+          "text": "the expected output model was trained on pooled data from all 22 inverters including the two"
+        },
+        {
+          "words": 14,
+          "text": "was built on the hypothesis that a short lag window would capture thermal lag"
+        },
+        {
+          "words": 14,
+          "text": "the target as a capacity normalized performance ratio before the regression step rather than"
+        },
+        {
+          "words": 13,
+          "text": "95th percentile spread of individual random forest tree predictions achieves only 55 7"
+        },
+        {
+          "words": 12,
+          "text": "temperature and time of day are the inputs the weather to power"
+        },
+        {
+          "words": 11,
+          "text": "over random forest despite random forest's marginally lower point estimate rmse"
+        },
+        {
+          "words": 10,
+          "text": "a statistically grounded control chart rule for flagging underperforming inverters"
+        },
+        {
+          "words": 10,
+          "text": "the fleet's expected curve is pulled down very slightly by"
+        },
+        {
+          "words": 10,
+          "text": "a given irradiance level does not map to the same"
+        }
+      ]
+    },
+    "paper/other_repo_readme_reference_only.md": {
+      "source_words": 495,
+      "matched_words": 0,
+      "pct": 0.0,
+      "runs": []
+    }
+  }
+}

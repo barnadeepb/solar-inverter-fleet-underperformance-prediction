@@ -1,0 +1,46 @@
+{
+  "source": "PESA_Full_Paper.pdf",
+  "placeholders": [],
+  "citations": {
+    "first_appearance_order": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "ascending": true,
+    "cited_count": 17,
+    "listed_count": 17,
+    "cited_not_listed": [],
+    "listed_not_cited": []
+  },
+  "number_issues": [
+    {
+      "kind": "rounding",
+      "forms": [
+        "63.9",
+        "64"
+      ]
+    },
+    {
+      "kind": "rounding",
+      "forms": [
+        "94.7",
+        "95"
+      ]
+    }
+  ]
+}
