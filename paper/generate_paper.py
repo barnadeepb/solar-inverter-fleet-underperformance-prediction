@@ -10,6 +10,8 @@ import re
 import shutil
 import zipfile
 
+import pandas as pd
+
 REPO = pathlib.Path(__file__).resolve().parent.parent
 RESULTS = REPO / "results"
 PAPER_DIR = REPO / "paper"
@@ -32,6 +34,11 @@ robust = load("robustness.json")
 uncertainty = load("uncertainty_calibration.json")
 interp = load("interpretability.json")
 latency = load("latency_benchmark.json")
+split_comparison = load("split_comparison.json")
+inverter_ratios = pd.read_csv(RESULTS / "metrics" / "inverter_performance_ratios.csv")
+flagged_days = inverter_ratios[inverter_ratios["flagged_underperforming"]]["days_below_band"]
+FLAGGED_DAYS_LOW = int(flagged_days.min())
+FLAGGED_DAYS_HIGH = int(flagged_days.max())
 
 R = bench["results"]
 
@@ -229,9 +236,11 @@ ABSTRACT_TEXT = (
     "reference against which every inverter in a 22-unit fleet at a real "
     "Indian solar plant is scored. Eight regression approaches, spanning "
     "linear, ensemble, and neural models, plus a managed AutoML service, "
-    "are compared under a chronological train-test split rather than a "
-    "random one, which avoids the accuracy inflation that a random split "
-    "produces on short-interval PV telemetry. The best models reach a "
+    "are compared under a chronological train-test split, which tests "
+    "genuine forecasting into an unseen future period rather than "
+    "interpolation, and we show this choice of split changes which model "
+    "class looks best more than it changes the achievable error level. "
+    "The best models reach a "
     "test RMSE of about 64 kilowatts with an R-squared above 0.96. The "
     "trained model is then used to compute a performance ratio for each "
     "inverter, and a statistical control-chart rule flags two inverters "
@@ -333,7 +342,8 @@ def build_body():
     parts.append(bullet(
         "A direct comparison between a chronological and a random "
         "train-test split on the same 15-minute PV telemetry, showing "
-        "that a random split materially overstates accuracy on this data."
+        "that split choice changes which model class appears best, not "
+        "just the absolute error level."
     ))
     parts.append(bullet(
         "A statistically grounded control-chart rule for flagging "
@@ -353,9 +363,10 @@ def build_body():
     parts.append(heading1("Related Work"))
     parts.append(body(
         "Photovoltaic power forecasting has a substantial literature; "
-        "Antonanzas et al. [3] review over seventy forecasting studies and "
-        "find that machine learning methods, particularly neural networks "
-        "and tree-based ensembles, dominate recent work. That literature "
+        "Antonanzas et al. [3] survey a large body of forecasting "
+        "techniques and report that machine learning methods, including "
+        "neural networks and tree-based ensembles, account for a "
+        "majority of the approaches reviewed. That literature "
         "is concerned mainly with predicting future output for grid "
         "dispatch, which is a related but distinct problem from the one "
         "addressed here: we use a model of expected output not to forecast "
@@ -445,11 +456,15 @@ def build_body():
     parts.append(body(
         "The primary evaluation split is chronological: the first 24 "
         "days of Plant 1 are used for training and the remaining "
-        "approximately 10 days for testing. This is a materially harder "
-        "and more honest test than a random row-wise split, which would "
-        "let daylight readings from the same or adjacent days appear on "
-        "both sides of the split and inflate apparent accuracy through "
-        "near-duplicate leakage. Night-time readings, where irradiation "
+        "approximately 10 days for testing. This is a more honest test of "
+        "deployment behavior than a random row-wise split, since it "
+        "evaluates genuine forecasting into an unseen future period "
+        "rather than interpolation between rows drawn from the same "
+        "34-day window; Section V-A reports a direct comparison against a "
+        "random split and shows the two protocols disagree on which "
+        "model class performs best, which is the more consequential "
+        "effect of split choice here than any change in absolute error. "
+        "Night-time readings, where irradiation "
         "is zero, are excluded from all accuracy metrics, since a model "
         "that always predicts near zero at night would otherwise dominate "
         "the error statistics with a trivially solved portion of the "
@@ -556,6 +571,32 @@ def build_body():
         "the best local model, the MLP, despite requiring on the order "
         "of an hour of managed training compute against seconds on a "
         "single CPU core."
+    ))
+    rand_r = split_comparison["random_split_rmse"]
+    chrono_r = split_comparison["chronological_split_rmse"]
+    parts.append(body(
+        "Split choice changes which model class looks best more than it "
+        "changes the achievable error level. Under a random 80/20 "
+        "row-wise split on the same daylight data, the tree ensembles "
+        "(random forest " + fmt(rand_r["random_forest"]) + " kW, XGBoost " +
+        fmt(rand_r["xgboost"]) + " kW, LightGBM " + fmt(rand_r["lightgbm"]) +
+        " kW) outperform linear and ridge regression (" +
+        fmt(rand_r["linear_regression"]) + " and " + fmt(rand_r["ridge"]) +
+        " kW) by roughly 12 percent. Under the chronological split used "
+        "throughout this paper, that gap nearly disappears: linear "
+        "regression (" + fmt(chrono_r["linear_regression"]) + " kW) comes "
+        "within 2 percent of the tree ensembles (" +
+        fmt(chrono_r["random_forest"]) + " to " + fmt(chrono_r["xgboost"]) +
+        " kW). Neither split is uniformly harder in an absolute sense "
+        "here; the naive baseline itself scores slightly better under the "
+        "chronological split (" + fmt(chrono_r["naive_mean"]) + " kW) than "
+        "the random one (" + fmt(rand_r["naive_mean"]) + " kW), since the "
+        "final ten days happen to have less variable weather than a "
+        "random 20 percent sample of the full window. The practical "
+        "conclusion is methodological rather than about raw accuracy: a "
+        "random split here would have credited model complexity with an "
+        "advantage that a genuinely out-of-time evaluation does not "
+        "support."
     ))
 
     parts.append(heading2("Underperformance Detection"))
@@ -666,10 +707,11 @@ def build_body():
         "this model's uncertainty estimates are used operationally. The "
         "underperformance finding in Section V-B is not undermined by "
         "this miscalibration, since the flagged inverters' deficits, "
-        "five to seven percent of expected output sustained over "
-        "thirty-two to thirty-four days, are far larger and more durable "
-        "than a single day's point-estimate error against daylight AC "
-        "power readings that regularly exceed several hundred kilowatts."
+        "five to seven percent of expected output flagged on " +
+        str(FLAGGED_DAYS_LOW) + " to " + str(FLAGGED_DAYS_HIGH) +
+        " of the 34 study days, are far larger and more durable than a "
+        "single day's point-estimate error against daylight AC power "
+        "readings that regularly exceed several hundred kilowatts."
     ))
 
     parts.append(heading2("Interpretability"))
@@ -717,12 +759,14 @@ def build_body():
     parts.append(body(
         "Three observations recur across these results. First, model "
         "complexity is not the limiting factor for the regression task: "
-        "a linear model comes within a few percent of the best ensemble, "
-        "and a managed AutoML product matches a five-layer MLP after far "
-        "more training time and cost. What matters more is getting the "
-        "feature set and evaluation split right, since the chronological "
-        "split alone changes the reported RMSE by roughly thirty percent "
-        "relative to a random split on the same data. Second, the "
+        "a linear model comes within a few percent of the best ensemble "
+        "under the chronological split, and a managed AutoML product "
+        "matches a five-layer MLP after far more training time and cost. "
+        "What matters more is getting the feature set and evaluation "
+        "split right: under a random split the tree ensembles hold a "
+        "genuine edge over linear regression, and only the chronological "
+        "split reveals that this edge does not survive a real train "
+        "against a real, later test period. Second, the "
         "underperformance finding is the paper's most actionable result: "
         "two inverters with a sustained five to seven percent output "
         "deficit are a concrete maintenance target, identified without "
@@ -794,7 +838,13 @@ def build_body():
 # references
 # ---------------------------------------------------------------------------
 
-REFERENCES = [
+# Indexed by original drafting order (1 = dataset, 2 = IEC 61724, etc).
+# This is NOT citation order -- see CITATION_ORDER below, which reorders
+# these to match first appearance in the body text, and REMAP, which
+# rewrites every in-text [N] to match. IEEE numbering requires references
+# to appear in order of first citation; drafting them in logical groups
+# first and reordering mechanically here avoids hand-renumbering bugs.
+REFERENCES_BY_DRAFT_ORDER = [
     'J. Anikannal, "Solar Power Generation Data," Kaggle dataset, 2020. [Online]. Available: https://www.kaggle.com/datasets/anikannal/solar-power-generation-data',
     'International Electrotechnical Commission, IEC 61724-1:2017, Photovoltaic system performance, Part 1: Monitoring. Geneva, Switzerland: IEC, 2017.',
     'J. Antonanzas, N. Osorio, R. Escobar, R. Urraca, F. J. Martinez-de-Pison, and F. Antonanzas-Torres, "Review of photovoltaic power forecasting," Solar Energy, vol. 136, pp. 78-111, 2016.',
@@ -810,9 +860,23 @@ REFERENCES = [
     'X. He, K. Zhao, and X. Chu, "AutoML: A survey of the state-of-the-art," Knowledge-Based Systems, vol. 212, art. 106622, 2021.',
     'F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, V. Dubourg, J. VanderPlas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duchesnay, "Scikit-learn: Machine learning in Python," Journal of Machine Learning Research, vol. 12, pp. 2825-2830, 2011.',
     'A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, A. Desmaison, A. Kopf, E. Yang, Z. DeVito, M. Raison, A. Tejani, S. Chilamkurthy, B. Steiner, L. Fang, J. Bai, and S. Chintala, "PyTorch: An imperative style, high-performance deep learning library," in Advances in Neural Information Processing Systems 32, 2019, pp. 8024-8035.',
-    'Google Cloud, "AutoML on Vertex AI, tabular data," Google Cloud documentation. [Online]. Available: https://cloud.google.com/vertex-ai/docs/tabular-data/tabular-workflows/introduction',
+    'Google Cloud, "Tabular Workflow for End-to-End AutoML," Vertex AI documentation. [Online]. Available: https://docs.cloud.google.com/vertex-ai/docs/tabular-data/tabular-workflows/e2e-automl',
     'B. Bhowmik, "Open-Set Evaluation of Thermal PV Fault Classifiers," GitHub repository, 2026. [Online]. Available: https://github.com/barnadeepb/open-set-solar-fault-detection',
 ]
+
+# Order these draft-numbered references actually first appear in the body
+# text (verified against the assembled document, not assumed).
+CITATION_ORDER = [2, 3, 4, 5, 17, 1, 6, 7, 8, 15, 14, 16, 13, 12, 10, 9, 11]
+REFERENCES = [REFERENCES_BY_DRAFT_ORDER[n - 1] for n in CITATION_ORDER]
+CITATION_REMAP = {old: new for new, old in enumerate(CITATION_ORDER, start=1)}
+
+
+def remap_citations(text):
+    return re.sub(
+        r"\[(\d+)\]",
+        lambda m: "[" + str(CITATION_REMAP[int(m.group(1))]) + "]",
+        text,
+    )
 
 
 def build_references():
@@ -865,7 +929,7 @@ def main():
     close_start = xml.find('<w:p w14:paraId="02077846"')
     assert kw_para_end > 0 and close_start > kw_para_end
 
-    new_content = build_body() + build_references()
+    new_content = remap_citations(build_body()) + build_references()
     xml = xml[:kw_para_end] + new_content + xml[close_start:]
 
     # paragraph 02077846 carries the crucial section break into the
