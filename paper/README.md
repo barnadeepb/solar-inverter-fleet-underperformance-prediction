@@ -1,12 +1,15 @@
 # Full paper draft
 
-Not yet written. Will be drafted from the results in `results/metrics/`
-once the Vertex AI AutoML benchmark (`src/vertex_automl_evaluate.py`)
-finishes and its numbers are folded into
-`results/metrics/regression_benchmark.json`.
+Full paper text not yet written. Two source documents are done and ready
+to write from:
 
-Planned sections: introduction/motivation, related work (including an
-explicit contrast with the open-set thermal-image PV fault detection
-project, see the README's "Relationship to other work" section),
-dataset, methodology, results, rigor/robustness discussion, limitations,
-conclusion, references.
+- `analysis.md` -- section-by-section breakdown of every result in
+  `results/metrics/`, plus a suggested full paper structure (title,
+  abstract, 10 sections).
+- `references.md` -- 17 references, each individually verified against a
+  live source before inclusion, in IEEE numbered format ready to paste
+  into the template.
+
+Next step: draft the actual paper prose from `analysis.md` into the
+official PESA Full Paper template (`icpesa.net/files/paper-template.docx`)
+once downloaded, at 4+ pages including figures/tables/references.
