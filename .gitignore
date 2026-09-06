@@ -12,4 +12,5 @@ results/models/*.pt
 results/models/*.pkl
 results/vertex_data/
 src/vertex_eval.log
+paper/_build/
 
